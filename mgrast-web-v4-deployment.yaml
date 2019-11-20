@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mgrast-web-v4-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+      matchLabels:
+        app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+          - name: task-pv-storage
+            persistentVolumeClaim:
+              claimName: task-pv-claim
+      containers:
+      - name: nginx
+        image: nginx:stable-alpine
+        ports:
+          - containerPort: 80
+        volumeMounts:
+                - mountPath: "/usr/share/nginx/html"
+                  name: task-pv-storage
+      initContainers:
+      - name: init-gitclone
+        image: alpine/git:latest
+        workingDir: '/git'
+        command: ["/bin/sh"]
+        args: ['-c', 'if [ ! -d .git ] ;  then git clone --recursive https://github.com/MG-RAST/MG-RASTv4.git . ; else git pull ; fi']
+        volumeMounts:
+                - mountPath: "/git"
+                  name: task-pv-storage
+ 
