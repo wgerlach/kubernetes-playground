@@ -1,0 +1,9 @@
+dashboard:
+  enabled: true
+  domain: dashboard.localhost
+kubernetes:
+  namespaces:
+    - default
+    - kube-system
+  ingressClass: traefik
+externalIP: 140.221.76.240

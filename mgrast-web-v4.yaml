@@ -1,18 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mgrast-web-v4-service
+spec:
+  type: NodePort
+  selector:
+    k8s-app: traefik-ingress
+  ports:
+  - name: http
+    targetPort: 80
+    port: 80
+  selector:
+    app: mgrast-web-v4-deployment
+
+---
+  
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mgrast-web-v4-deployment
-  labels:
-    app: nginx
 spec:
   replicas: 3
   selector:
       matchLabels:
-        app: nginx
+        app: mgrast-web-v4-pod
   template:
     metadata:
       labels:
-        app: nginx
+        app: mgrast-web-v4-pod
     spec:
       volumes:
           - name: task-pv-storage
